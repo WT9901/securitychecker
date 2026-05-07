@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.env
+.env.*
+.venv/
+venv/
+pip-selfcheck.json
+
+# Pytest
+.pytest_cache/
+
+# Byte-compiled / logs
+*.log
+
+# Editor directories
+.vscode/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+
+# Temporary files
+*.swp

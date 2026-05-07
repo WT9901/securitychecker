@@ -1,0 +1,136 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login and Registration Security Checker</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Login and Registration Security Checker</h1>
+      <p class="subtitle">Two-step security analysis: Identify risks from requirements, then validate implementation</p>
+
+      <!-- STEP 1: REQUIREMENT ANALYSIS -->
+      <section class="workflow-section">
+        <div class="workflow-header">
+          <h2>🔍 Step 1: Requirement Analysis</h2>
+          <p class="workflow-description">Enter a user story or requirement. We'll identify potential security risks and what attacks to watch for.</p>
+        </div>
+
+        <form method="post" class="card">
+          <input type="hidden" name="action" value="analyze" />
+          <label for="requirement"><strong>Enter your requirement or user story:</strong></label>
+          <textarea
+            id="requirement"
+            name="requirement"
+            rows="5"
+            maxlength="400"
+            placeholder="Example: Users can register with email and password, then log in securely."
+          ></textarea>
+          <button type="submit" class="btn-primary">Analyze Requirement</button>
+        </form>
+
+        <!-- Analysis Results -->
+        
+
+        
+
+        
+      </section>
+
+      <!-- STEP 2: IMPLEMENTATION VALIDATION -->
+      <section class="workflow-section">
+        <div class="workflow-header">
+          <h2>🔐 Step 2: Implementation Validation</h2>
+          <p class="workflow-description">Test a live login/registration URL. We'll check security headers, cookies, HTTPS, and other implementation details.</p>
+        </div>
+
+        <form method="post" class="card">
+          <input type="hidden" name="action" value="validate" />
+          <label for="targetUrl"><strong>Enter target URL to test:</strong></label>
+          <input
+            id="targetUrl"
+            name="target_url"
+            type="url"
+            value=""
+            placeholder="https://example.com/auth/login"
+          />
+          <button type="submit" class="btn-primary">Test URL</button>
+        </form>
+
+        <!-- Validation Results -->
+        
+
+        
+
+        
+      </section>
+
+      <!-- EXPORT & HISTORY -->
+      <section class="workflow-section">
+        <div class="workflow-header">
+          <h2>📤 Export & Evidence</h2>
+          <p class="workflow-description">Download your analysis results and validation evidence in JSON or PDF format for your report or documentation.</p>
+        </div>
+
+        <div class="export-grid">
+          <!-- PDF Export Card -->
+          <section class="card export-card">
+            <h3>📄 Export PDF Report</h3>
+            <p><strong>What's included:</strong></p>
+            <ul class="export-info">
+              <li>✓ Formatted security assessment report</li>
+              <li>✓ Requirement analysis with risks identified</li>
+              <li>✓ URL validation results table</li>
+              <li>✓ Professional formatting for submission</li>
+            </ul>
+            <a class="button-link btn-export" href="/export/evidence.pdf" target="_blank">📄 Download PDF Report</a>
+          </section>
+
+          <!-- JSON Export Card -->
+          <section class="card export-card">
+            <h3>📥 Export JSON Evidence</h3>
+            <p><strong>What's included:</strong></p>
+            <ul class="export-info">
+              <li>✓ Latest requirement analysis with identified risks</li>
+              <li>✓ Latest URL validation results and header checks</li>
+              <li>✓ Complete validation history (last 25 tests)</li>
+              <li>✓ Timestamp for reproducibility</li>
+            </ul>
+            <a class="button-link btn-export" href="/export/evidence.json" target="_blank">📥 Download Evidence JSON</a>
+          </section>
+
+          <!-- History Card -->
+          
+          <section class="card history-card">
+            <h3>📜 Recent Validation History</h3>
+            <p class="meta-info">Last 3 validation(s)</p>
+            <ul class="history-list">
+              
+              <li class="history-item">
+                <p class="history-time">📅 2026-04-06T19:59:05.276000+00:00</p>
+                <p class="history-url">🌐 https://gitlab.com/users/sign_in</p>
+                <p class="history-summary">Validation completed with recommendations.</p>
+              </li>
+              
+              <li class="history-item">
+                <p class="history-time">📅 2026-04-06T19:48:11.301767+00:00</p>
+                <p class="history-url">🌐 https://gitlab.com/users/sign_in</p>
+                <p class="history-summary">Validation completed with recommendations.</p>
+              </li>
+              
+              <li class="history-item">
+                <p class="history-time">📅 2026-04-06T19:47:45.209667+00:00</p>
+                <p class="history-url">🌐 https://gitlab.com/users/sign_in</p>
+                <p class="history-summary">Validation completed with recommendations.</p>
+              </li>
+              
+            </ul>
+          </section>
+          
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

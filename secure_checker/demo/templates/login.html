@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self';">
+  <title>SecureForm Demo — Login</title>
+  <link rel="stylesheet" href="{{ url_for('demo.static', filename='css/styles.css') }}">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="logo">SecureForm Demo</div>
+    <div class="header-meta">
+      <span>CSRF Active</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="page-intro">
+    <h1>Secure Login</h1>
+    <p>Enter your credentials to log in. This form demonstrates basic login security with CSRF protection and whitelist validation.</p>
+  </div>
+
+  <div style="max-width: 500px; margin: 2rem auto;">
+    <form class="card" action="{{ url_for('demo.login') }}" method="POST" autocomplete="off">
+      
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+
+      {% if message %}
+      <div style="padding: 1rem; margin-bottom: 1rem; background: #dbeafe; border: 1px solid #93c5fd; border-radius: 6px; color: #1e40af;">
+        {{ message }}
+      </div>
+      {% endif %}
+
+      <div class="field">
+        <label for="email">Email or Username <span class="req">*</span></label>
+        <input type="text" id="email" name="email" required autofocus autocomplete="username">
+      </div>
+
+      <div class="field">
+        <label for="password">Password <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="password" id="password" name="password" required autocomplete="current-password">
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <button type="submit" class="btn btn--primary">Login</button>
+        <a href="{{ url_for('demo.register') }}" class="btn btn--ghost" style="text-decoration: none; text-align: center;">Create Account</a>
+      </div>
+
+    </form>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+</footer>
+
+</body>
+</html>

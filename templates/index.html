@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login and Registration Security Checker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Login and Registration Security Checker</h1>
+      <p class="subtitle">Two-step security analysis: Identify risks from requirements, then validate implementation</p>
+
+      <section class="workflow-section">
+        <div class="workflow-header">
+          <h2>Step 1: Requirement Analysis</h2>
+          <p class="workflow-description">Enter a user story or requirement. We'll identify potential security risks and what attacks to watch for.</p>
+        </div>
+
+        <form method="post" class="card">
+          <input type="hidden" name="action" value="analyze" />
+          <label for="requirement"><strong>Enter your requirement or user story:</strong></label>
+          <textarea
+            id="requirement"
+            name="requirement"
+            rows="5"
+            maxlength="400"
+            placeholder="Example: Users can register with email and password, then log in securely."
+          >{{ requirement }}</textarea>
+          <button type="submit" class="btn-primary">Analyze Requirement</button>
+        </form>
+
+        {% if error %}
+        <section class="card error-card">
+          <h3>Error</h3>
+          <p>{{ error }}</p>
+        </section>
+        {% endif %}
+
+        {% if guidance %}
+        <section class="card info-card">
+          <h3>Analysis Complete</h3>
+          <p>{{ guidance }}</p>
+          {% if best_practices %}
+          <p><strong>General best practices:</strong></p>
+          <ul>
+            {% for practice in best_practices %}
+            <li>{{ practice }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </section>
+        {% endif %}
+
+        {% if results %}
+        <section class="card">
+          <h3>Identified Security Risks</h3>
+          <p class="meta-info">{{ results | length }} potential risk(s) found in your requirement</p>
+          {% for item in results %}
+          <article class="risk-card">
+            <div class="risk-header">
+              <h4>{{ item.title }}</h4>
+              <span class="confidence confidence-{{ item.confidence_level | lower }}">{{ item.confidence_level }} ({{ item.confidence_score }}%)</span>
+            </div>
+            <p><strong>Matched keywords:</strong> {{ item.matched_keywords | join(', ') }}</p>
+
+            <p><strong>Sample possible attacks:</strong></p>
+            <ul>
+              {% for abuse in item.abuse_cases %}
+              <li>{{ abuse }}</li>
+              {% endfor %}
+            </ul>
+
+            <p><strong>Best practices to prevent:</strong></p>
+            <ul>
+              {% for practice in item.best_practices %}
+              <li>{{ practice }}</li>
+              {% endfor %}
+            </ul>
+          </article>
+          {% endfor %}
+        </section>
+        {% endif %}
+      </section>
+
+      <section class="workflow-section">
+        <div class="workflow-header">
+          <h2>Step 2: Implementation Validation</h2>
+          <p class="workflow-description">Test a live login/registration URL. We'll check security headers, cookies, HTTPS, and other implementation details.</p>
+        </div>
+
+        <form method="post" class="card">
+          <input type="hidden" name="action" value="validate" />
+          <label for="targetUrl"><strong>Enter target URL to test:</strong></label>
+          <input
+            id="targetUrl"
+            name="target_url"
+            type="url"
+            value="{{ target_url }}"
+            placeholder="https://example.com/auth/login"
+          />
+          <button type="submit" class="btn-primary">Test URL</button>
+        </form>
+
+        {% if validation_error %}
+        <section class="card error-card">
+          <h3>Validation Failed</h3>
+          <p>{{ validation_error }}</p>
+        </section>
+        {% endif %}
+
+        {% if validation_summary %}
+        <section class="card success-card">
+          <h3>Validation Results</h3>
+          <p><strong>{{ validation_summary }}</strong></p>
+        </section>
+        {% endif %}
+
+        {% if validation_checks %}
+        <section class="card">
+          <h3>Security Header Check Results</h3>
+          <ul class="validation-list">
+            {% for check in validation_checks %}
+            <li class="validation-item validation-{{ check.status | lower }}">
+              <div class="check-header">
+                <strong>{{ check.name }}</strong>
+                <span class="status-badge status-{{ check.status | lower }}">{{ check.status }}</span>
+              </div>
+              <p class="check-details">{{ check.details }}</p>
+              <p class="check-recommendation"><strong>Recommendation:</strong> {{ check.recommendation }}</p>
+            </li>
+            {% endfor %}
+          </ul>
+        </section>
+        {% endif %}
+      </section>
+
+      <section class="workflow-section">
+        <div class="workflow-header">
+          <h2>Step 3: Export & Quick Access</h2>
+          <p class="workflow-description">Download your PDF report and open secure demo forms directly from here.</p>
+        </div>
+
+        <div class="export-grid">
+          <section class="card export-card">
+            <h3>Export PDF Report</h3>
+            <p><strong>What's included:</strong></p>
+            <ul class="export-info">
+              <li>Formatted security assessment report</li>
+              <li>Requirement analysis with risks identified</li>
+              <li>URL validation results table</li>
+              <li>Professional formatting for submission</li>
+            </ul>
+            <a class="button-link btn-export" href="{{ url_for('web.export_evidence_pdf') }}" target="_blank">Download PDF Report</a>
+          </section>
+
+          <section class="card export-card">
+            <h3>Open Secure Demo Forms</h3>
+            <p><strong>What's included:</strong></p>
+            <ul class="export-info">
+              <li>Secure registration form with strict validation controls</li>
+              <li>Secure login form with session-based authentication</li>
+            </ul>
+            <div class="quick-links">
+              <a class="button-link btn-export" href="{{ url_for('demo.register') }}">Open Secure Registration</a>
+              <a class="button-link btn-export" href="{{ url_for('demo.login') }}">Open Secure Login</a>
+            </div>
+          </section>
+
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

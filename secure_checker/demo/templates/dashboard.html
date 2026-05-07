@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SecureForm Demo — Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('demo.static', filename='css/styles.css') }}">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="logo">SecureForm Demo</div>
+    <div class="header-meta">
+      <span>Authenticated</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="page-intro">
+    <h1>Dashboard</h1>
+    <p>You are logged in. Here is your profile information.</p>
+  </div>
+
+  <div style="max-width: 800px;">
+    <div class="card">
+      <div class="section-label">User Profile</div>
+
+      <div class="field">
+        <label>Full Name</label>
+        <div style="padding: 0.6rem 0.75rem; background: #f9fafb; border-radius: 6px; border: 1px solid #d4dce6;">
+          {{ full_name or "(not provided)" }}
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Username</label>
+        <div style="padding: 0.6rem 0.75rem; background: #f9fafb; border-radius: 6px; border: 1px solid #d4dce6;">
+          {{ username }}
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <div style="padding: 0.6rem 0.75rem; background: #f9fafb; border-radius: 6px; border: 1px solid #d4dce6;">
+          {{ email }}
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #d4dce6; display: flex; gap: 1rem;">
+        <a href="{{ url_for('demo.logout') }}" class="btn btn--primary">Logout</a>
+        <a href="{{ url_for('demo.login') }}" class="btn btn--ghost">Back to Login</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+</footer>
+
+</body>
+</html>

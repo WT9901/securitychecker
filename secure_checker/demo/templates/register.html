@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-{{ nonce }}'; style-src 'self' 'nonce-{{ nonce }}'; font-src 'self'; img-src 'self' data:; connect-src 'self';">
+  <title>SecureForm Demo — Registration</title>
+  <link rel="stylesheet" href="{{ url_for('demo.static', filename='css/styles.css') }}">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="logo">SecureForm Demo</div>
+    <div class="header-meta">
+      <span id="rateBadge">Rate: 0 / 5</span>
+      <span>CSRF Active</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="page-intro">
+    <h1>Secure Registration Form</h1>
+    <p>This form demonstrates comprehensive input validation, threat detection, and CSRF protection. Every field is whitelist-validated both client-side and server-side.</p>
+  </div>
+
+  <div class="main-grid">
+    <div class="panel-col">
+      <form id="secureForm" class="card" action="{{ url_for('demo.register') }}" method="POST" autocomplete="off">
+        <input type="hidden" id="csrfToken" name="_csrf_token" value="">
+
+        <fieldset class="field">
+          <legend class="section-label">Identity</legend>
+
+          <div class="field">
+            <label for="fullName">Full Name <span class="req">*</span></label>
+            <input type="text" id="fullName" data-rule="name" required autocomplete="name">
+            <span class="err-msg" id="fullName-err"></span>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="username">Username <span class="req">*</span></label>
+              <input type="text" id="username" data-rule="username" required autocomplete="username">
+              <span class="err-msg" id="username-err"></span>
+              <span class="hint">3–32 characters, alphanumeric + underscore/hyphen</span>
+            </div>
+
+            <div class="field">
+              <label for="email">Email <span class="req">*</span></label>
+              <input type="email" id="email" data-rule="email" required autocomplete="email">
+              <span class="err-msg" id="email-err"></span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone (optional)</label>
+            <input type="tel" id="phone" data-rule="phone" autocomplete="tel">
+            <span class="err-msg" id="phone-err"></span>
+            <span class="hint">Digits, spaces, +, -, ( )</span>
+          </div>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend class="section-label">Credentials</legend>
+
+          <div class="field">
+            <label for="password">Password <span class="req">*</span></label>
+            <div class="input-wrap">
+              <input type="password" id="password" data-rule="password" required autocomplete="new-password">
+              <button type="button" class="toggle-pw">Show</button>
+            </div>
+            <span class="err-msg" id="password-err"></span>
+            <div class="strength-bar">
+              <div class="strength-fill" id="strengthFill"></div>
+            </div>
+            <span class="hint">Min 8 chars: uppercase, lowercase, digit, symbol</span>
+          </div>
+
+          <div class="field">
+            <label for="confirmPwd">Confirm Password <span class="req">*</span></label>
+            <div class="input-wrap">
+              <input type="password" id="confirmPwd" data-rule="confirm" required autocomplete="new-password">
+              <button type="button" class="toggle-pw">Show</button>
+            </div>
+            <span class="err-msg" id="confirmPwd-err"></span>
+          </div>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend class="section-label">Profile</legend>
+
+          <div class="field">
+            <label for="website">Website (optional)</label>
+            <input type="url" id="website" data-rule="url" placeholder="https://example.com" autocomplete="url">
+            <span class="err-msg" id="website-err"></span>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="dob">Date of Birth (optional)</label>
+              <input type="date" id="dob" data-rule="date">
+              <span class="err-msg" id="dob-err"></span>
+            </div>
+
+            <div class="field">
+              <label for="age">Age (optional)</label>
+              <input type="number" id="age" data-rule="age" min="0" max="150">
+              <span class="err-msg" id="age-err"></span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="country">Country (optional)</label>
+            <select id="country" data-rule="select">
+              <option value="">— Select —</option>
+              <option value="FI">Finland</option>
+              <option value="SE">Sweden</option>
+              <option value="NO">Norway</option>
+              <option value="DE">Germany</option>
+              <option value="US">United States</option>
+              <option value="GB">United Kingdom</option>
+              <option value="JP">Japan</option>
+              <option value="AU">Australia</option>
+            </select>
+            <span class="err-msg" id="country-err"></span>
+          </div>
+
+          <div class="field">
+            <label for="bio">Bio (optional)</label>
+            <textarea id="bio" data-rule="bio" placeholder="Tell us about yourself (max 500 chars)"></textarea>
+            <div class="below-field">
+              <span>Character count:</span>
+              <span class="char-count" id="bio-count">0</span>
+            </div>
+            <span class="err-msg" id="bio-err"></span>
+          </div>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend class="section-label">Preferences</legend>
+
+          <div class="field">
+            <label class="label-text">Notification Preference <span class="req">*</span></label>
+            <div class="radio-group">
+              <label class="choice-item">
+                <input type="radio" name="notif" value="email" checked>
+                <span>Email</span>
+              </label>
+              <label class="choice-item">
+                <input type="radio" name="notif" value="sms">
+                <span>SMS</span>
+              </label>
+              <label class="choice-item">
+                <input type="radio" name="notif" value="push">
+                <span>Push Notification</span>
+              </label>
+              <label class="choice-item">
+                <input type="radio" name="notif" value="none">
+                <span>None</span>
+              </label>
+            </div>
+            <span class="err-msg" id="notif-err"></span>
+          </div>
+
+          <div class="field">
+            <label for="accentColor">Accent Color (optional)</label>
+            <div class="color-row">
+              <input type="color" id="accentColor" value="#2563eb">
+              <span class="color-hex" id="colorHex">#2563eb</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="expRange">Years of Experience (optional)</label>
+            <div class="range-row">
+              <input type="range" id="expRange" min="0" max="50" value="5">
+              <span class="range-readout">
+                <span id="expLabel">5 years</span>
+              </span>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend class="section-label">Files & Search</legend>
+
+          <div class="field">
+            <label class="label-text">Profile Picture (optional, max 2 MB)</label>
+            <div class="file-drop" id="fileDrop">
+              <div class="file-drop-inner" id="fileDropInner">
+                <div class="upload-icon">Upload</div>
+                <p><strong>Drag & drop</strong> or <strong>click</strong> to upload</p>
+                <p style="font-size: 0.85rem; color: var(--c-muted); margin-top: 0.5rem;">JPEG, PNG, WebP up to 2 MB</p>
+              </div>
+              <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="file-preview" id="filePreview" hidden>
+              <img id="previewImg" alt="preview">
+              <div class="file-info">
+                <div class="file-name" id="fileName"></div>
+                <button type="button" class="clear-file" id="clearFile">Remove</button>
+              </div>
+            </div>
+            <span class="err-msg" id="fileInput-err"></span>
+          </div>
+
+          <div class="field">
+            <label for="searchQ">Search (optional)</label>
+            <input type="search" id="searchQ" data-rule="search" placeholder="e.g. 'secure programming'">
+            <span class="err-msg" id="searchQ-err"></span>
+            <span class="hint">Alphanumeric + spaces and basic punctuation</span>
+          </div>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend class="section-label">Agreement</legend>
+
+          <label class="choice-item choice-item--agree">
+            <input type="checkbox" id="agree" data-rule="agree" required>
+            <span>I agree to the <strong>Terms of Service</strong> and <strong>Privacy Policy</strong></span>
+          </label>
+          <span class="err-msg" id="agree-err"></span>
+        </fieldset>
+
+        <div class="submit-row">
+          <button type="submit" class="btn btn--primary">Register</button>
+          <button type="reset" class="btn btn--ghost">Clear</button>
+        </div>
+
+        <div class="submit-status" id="submitStatus"></div>
+      </form>
+    </div>
+
+    <div class="panel-col">
+      <div class="panel panel--info">
+        <div class="panel-title">Real-time Threat Monitor</div>
+        <div class="panel-sub">Live analysis of input fields</div>
+        <ul class="threat-list">
+          <li class="threat-row" id="threat-xss">
+            <div>
+              <div class="threat-name">XSS</div>
+              <div class="threat-desc">HTML/JS injection</div>
+            </div>
+            <div class="threat-status" data-status="ok">OK</div>
+          </li>
+          <li class="threat-row" id="threat-sql">
+            <div>
+              <div class="threat-name">SQL</div>
+              <div class="threat-desc">Query injection</div>
+            </div>
+            <div class="threat-status" data-status="ok">OK</div>
+          </li>
+          <li class="threat-row" id="threat-html">
+            <div>
+              <div class="threat-name">HTML</div>
+              <div class="threat-desc">Tag injection</div>
+            </div>
+            <div class="threat-status" data-status="ok">OK</div>
+          </li>
+          <li class="threat-row" id="threat-cmd">
+            <div>
+              <div class="threat-name">CMD</div>
+              <div class="threat-desc">Command injection</div>
+            </div>
+            <div class="threat-status" data-status="ok">OK</div>
+          </li>
+          <li class="threat-row" id="threat-path">
+            <div>
+              <div class="threat-name">PATH</div>
+              <div class="threat-desc">Path traversal</div>
+            </div>
+            <div class="threat-status" data-status="ok">OK</div>
+          </li>
+          <li class="threat-row" id="threat-proto">
+            <div>
+              <div class="threat-name">PROTO</div>
+              <div class="threat-desc">Protocol abuse</div>
+            </div>
+            <div class="threat-status" data-status="ok">OK</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">CSRF Token</div>
+        <div class="panel-sub" id="csrfBadge">Generating…</div>
+        <div class="info-list">
+          <li><strong>Status:</strong> Active</li>
+          <li><strong>Rotates:</strong> On submit</li>
+          <li><strong>Current token:</strong> <code id="footerToken" style="word-break: break-all; font-size: 0.8rem;">—</code></li>
+          <li>Token embedded in all POST requests for CSRF defense</li>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Rate Limiting</div>
+        <div class="panel-sub" id="rateStatus">OK</div>
+        <div class="info-list">
+          <li><strong>Limit:</strong> 5 submissions per 60 seconds</li>
+          <li><strong>Strategy:</strong> Sliding window counter</li>
+          <li id="rateBadge">Rate: 0 / 5</li>
+          <li>Prevents brute-force and DoS attacks</li>
+        </div>
+      </div>
+
+      <div class="panel" id="outputPanel" hidden>
+        <div class="panel-title">Sanitized Payload</div>
+        <div class="panel-sub">Collected on last submit</div>
+        <dl class="output-grid" id="outputGrid"></dl>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+</footer>
+
+<script type="module" src="{{ url_for('demo.static', filename='js/app.js') }}"></script>
+
+</body>
+</html>
